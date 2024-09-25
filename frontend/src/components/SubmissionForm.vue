@@ -31,6 +31,7 @@
 import { ref, computed, } from 'vue';
 import Editor from './Editor.vue';
 
+const API_URL = import.meta.env.VITE_API_URL;
 const handleImageUpload = (event) => {
       const file = event.target.files[0];
       if (file) {
@@ -53,12 +54,24 @@ const formData = ref({
     createDate: '',
     content: '<p>Add Post here.</p>',
 });
-   const submitForm = () => {
+   const submitForm = async() => {
       const submissionData = {
         ...formData.value,
         id: Date.now(),
         slug: slugComputed.value // Use the computed slug
       };
      console.log("submissionData:", submissionData)
+     try{
+      const response = await fetch(`${API_URL}/api/upsertExample`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: `${submissionData.id}`, name: `${submissionData}` }),
+        const data = await response.json();
+        console.log("data:", data);
+     }catch(error){
+      console.log("error:",error)
+     }
     };
 </script>
